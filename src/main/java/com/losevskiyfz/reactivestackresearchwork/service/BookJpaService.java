@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BookJpaService {
+public class BookJpaService implements BookService {
     private final BookRepository bookRepository;
 
     @Autowired
@@ -14,6 +14,7 @@ public class BookJpaService {
         this.bookRepository = bookRepository;
     }
 
+    @Override
     public BookRecord save(BookRecord book) {
         return bookRepository.save(book);
     }
