@@ -3,11 +3,9 @@ package com.losevskiyfz.reactivestackresearchwork.controller;
 import com.losevskiyfz.reactivestackresearchwork.domain.BookRecord;
 import com.losevskiyfz.reactivestackresearchwork.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
@@ -33,6 +31,13 @@ public class BookRecordController {
                                 .toUri()
                 )
                 .body(savedBookRecord);
+    }
+
+    @GetMapping("/book")
+    public Page<BookRecord> get(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return bookService.getPaginated(page, size);
     }
 
 }
