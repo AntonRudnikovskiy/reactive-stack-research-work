@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/book")
 public class BookRecordController {
 
     private final BookService bookService;
@@ -19,7 +19,7 @@ public class BookRecordController {
         this.bookService = bookService;
     }
 
-    @PostMapping("/book")
+    @PostMapping()
     ResponseEntity<BookRecord> save(@RequestBody BookRecord bookRecord) {
         BookRecord savedBookRecord = bookService.save(bookRecord);
         return ResponseEntity
@@ -33,7 +33,7 @@ public class BookRecordController {
                 .body(savedBookRecord);
     }
 
-    @GetMapping("/book")
+    @GetMapping()
     public Page<BookRecord> get(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
