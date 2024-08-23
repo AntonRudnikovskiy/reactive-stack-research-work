@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 
 public interface BookService {
     BookRecord save(BookRecord book);
-    Page<BookRecord> getPaginated(int page, int size);
+    Page<BookRecord> getPaginated(int page, int size, String pattern);
 }
