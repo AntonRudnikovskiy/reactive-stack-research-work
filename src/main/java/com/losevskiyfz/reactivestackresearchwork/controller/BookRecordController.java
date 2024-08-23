@@ -34,10 +34,10 @@ public class BookRecordController {
     }
 
     @GetMapping("/book")
-    public Page<BookRecord> get(
+    public ResponseEntity<Page<BookRecord>> get(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return bookService.getPaginated(page, size);
+        return ResponseEntity.ok(bookService.getPaginated(page, size));
     }
 
 }
