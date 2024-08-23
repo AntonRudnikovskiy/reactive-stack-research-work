@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 
 public interface BookService {
     BookRecord save(BookRecord book);
-    Page<BookRecord> getPaginated(int page, int size);
 
     void delete(String bookId);
+
+    Page<BookRecord> getPaginated(int page, int size, String pattern);
+
 }

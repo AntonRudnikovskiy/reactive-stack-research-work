@@ -23,9 +23,9 @@ public class BookJpaService implements BookService {
     }
 
     @Override
-    public Page<BookRecord> getPaginated(int page, int size) {
+    public Page<BookRecord> getPaginated(int page, int size, String pattern) {
         Pageable pageRequest = PageRequest.of(page, size);
-        return bookRepository.findAll(pageRequest);
+        return bookRepository.getByTextPattern(pageRequest, pattern);
     }
 
     @Override

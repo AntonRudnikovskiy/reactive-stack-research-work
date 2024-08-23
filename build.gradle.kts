@@ -24,6 +24,13 @@ repositories {
 }
 
 dependencies {
+    dependencies {
+        implementation("com.github.javafaker:javafaker:1.0.2") {
+            exclude(module = "org.yaml")
+        }
+        implementation("org.yaml:snakeyaml:1.26")
+    }
+
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 //    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -32,6 +39,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.hamcrest:hamcrest-all:1.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

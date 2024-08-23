@@ -9,9 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.hamcrest.Matchers.is;
 
+import java.util.List;
+
+import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecordMockGenerator.generateFakeBookRecord;
+import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecordMockGenerator.generateFakeBookRecords;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,28 +35,13 @@ class BookRecordControllerIT {
     MockMvc mockMvc;
     @MockBean
     BookRepository bookRepository;
-
     final ObjectMapper objectMapper = new ObjectMapper();
     final ObjectWriter objectWriter = objectMapper.writer();
-    BookRecord testBook = new BookRecord(
-            "1",
-            "book",
-            2,
-            new String[]{"Alex Hirsh", "Adam Libovski"},
-            "Gabella",
-            506,
-            "Titul",
-            2003,
-            "Lissabon",
-            "104-983",
-            "The short description of the book...",
-            "2101b"
-    );
-    String requestJson;
 
     @Test
     void save() throws Exception {
-        requestJson = objectWriter.writeValueAsString(testBook);
+        BookRecord testBook = generateFakeBookRecord();
+        String requestJson = objectWriter.writeValueAsString(testBook);
         when(bookRepository.save(any(BookRecord.class))).thenReturn(testBook);
         mockMvc.perform(
                         post("/api/v1/book")
@@ -56,9 +50,29 @@ class BookRecordControllerIT {
                 )
                 .andExpect(content().json(requestJson))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(header().string("Location", "http://localhost/api/v1/book/1"))
+                .andExpect(header().string("Location", "http://localhost/api/v1/book/" + testBook.id()))
                 .andExpect(status().isCreated());
         verify(bookRepository).save(any(BookRecord.class));
+    }
+
+    @Test
+    void get() throws Exception {
+        int numberOfBooks = 41;
+        int pageNumber = 1;
+        int pageSize = 20;
+        List<BookRecord> testBooks = generateFakeBookRecords(numberOfBooks);
+        Page<BookRecord> responsePage = new PageImpl<>(testBooks, PageRequest.of(pageNumber, pageSize), numberOfBooks);
+        when(bookRepository.getByTextPattern(any(PageRequest.class), any(String.class))).thenReturn(responsePage);
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/v1/book")
+                )
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page.size", is(pageSize)))
+                .andExpect(jsonPath("$.page.number", is(pageNumber)))
+                .andExpect(jsonPath("$.page.totalElements", is(numberOfBooks)))
+                .andExpect(jsonPath("$.page.totalPages", is(numberOfBooks / pageSize + 1)));
+        verify(bookRepository).getByTextPattern(any(PageRequest.class), any(String.class));
     }
 
 }

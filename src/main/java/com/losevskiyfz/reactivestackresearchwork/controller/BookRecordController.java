@@ -4,6 +4,7 @@ import com.losevskiyfz.reactivestackresearchwork.domain.BookRecord;
 import com.losevskiyfz.reactivestackresearchwork.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -34,9 +35,13 @@ public class BookRecordController {
     }
 
     @GetMapping
-    public Page<BookRecord> get(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "10") int size) {
-        return bookService.getPaginated(page, size);
+    public ResponseEntity<Page<BookRecord>> get(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "") String pattern) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(bookService.getPaginated(page, size, pattern));
     }
 
     @DeleteMapping("/{id}")
