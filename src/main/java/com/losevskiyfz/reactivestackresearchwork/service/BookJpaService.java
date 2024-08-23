@@ -28,4 +28,9 @@ public class BookJpaService implements BookService {
         return bookRepository.getByTextPattern(pageRequest, pattern);
     }
 
+    @Override
+    public void delete(String bookId) {
+        bookRepository.deleteById(bookId);
+    }
+
 }
