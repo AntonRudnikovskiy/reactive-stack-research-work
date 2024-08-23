@@ -62,7 +62,7 @@ class BookRecordControllerIT {
         int pageSize = 20;
         List<BookRecord> testBooks = generateFakeBookRecords(numberOfBooks);
         Page<BookRecord> responsePage = new PageImpl<>(testBooks, PageRequest.of(pageNumber, pageSize), numberOfBooks);
-        when(bookRepository.findAll(any(PageRequest.class))).thenReturn(responsePage);
+        when(bookRepository.getByTextPattern(any(PageRequest.class), any(String.class))).thenReturn(responsePage);
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/api/v1/book")
                 )
@@ -72,7 +72,7 @@ class BookRecordControllerIT {
                 .andExpect(jsonPath("$.page.number", is(pageNumber)))
                 .andExpect(jsonPath("$.page.totalElements", is(numberOfBooks)))
                 .andExpect(jsonPath("$.page.totalPages", is(numberOfBooks / pageSize + 1)));
-        verify(bookRepository).findAll(any(PageRequest.class));
+        verify(bookRepository).getByTextPattern(any(PageRequest.class), any(String.class));
     }
 
 }
