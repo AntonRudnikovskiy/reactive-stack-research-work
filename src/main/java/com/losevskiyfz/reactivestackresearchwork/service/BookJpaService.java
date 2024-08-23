@@ -30,9 +30,7 @@ public class BookJpaService implements BookService {
 
     @Override
     public void delete(String bookId) {
-        if (bookRepository.existsById(bookId)) {
-            bookRepository.deleteById(bookId);
-        }
+        bookRepository.deleteById(bookId);
     }
 
 }
