@@ -19,7 +19,7 @@ public class BookRecordController {
         this.bookService = bookService;
     }
 
-    @PostMapping()
+    @PostMapping
     ResponseEntity<BookRecord> save(@RequestBody BookRecord bookRecord) {
         BookRecord savedBookRecord = bookService.save(bookRecord);
         return ResponseEntity
@@ -33,11 +33,14 @@ public class BookRecordController {
                 .body(savedBookRecord);
     }
 
-    @GetMapping()
-    public Page<BookRecord> get(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    @GetMapping
+    public Page<BookRecord> get(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size) {
         return bookService.getPaginated(page, size);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") String id) {
+        return ResponseEntity.ok(bookService.delete(id));
+    }
 }

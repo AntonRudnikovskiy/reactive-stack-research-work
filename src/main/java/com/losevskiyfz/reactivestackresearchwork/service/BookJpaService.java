@@ -27,4 +27,15 @@ public class BookJpaService implements BookService {
         Pageable pageRequest = PageRequest.of(page, size);
         return bookRepository.findAll(pageRequest);
     }
+
+    @Override
+    public String delete(String bookId) {
+        if (bookRepository.existsById(bookId)) {
+            bookRepository.deleteById(bookId);
+            return "Запись успешно удалена";
+        } else {
+            return "Запись не удалена, по текущему id - " + bookId;
+        }
+    }
+
 }
