@@ -1,19 +1,12 @@
 package com.losevskiyfz.reactivestackresearchwork.domain;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.validation.constraints.NotEmpty;
 
-@Document("books")
-@Builder
-public record BookRecord(
-        @Id
-        String id,
+public record PostBookDto(
         String type,
         Integer quantity,
         String[] authors,
-        @NotBlank
+        @NotEmpty
         String name,
         Integer pages,
         String publisher,
