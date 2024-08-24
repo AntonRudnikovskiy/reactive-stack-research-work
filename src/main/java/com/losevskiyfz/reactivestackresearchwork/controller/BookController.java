@@ -61,7 +61,6 @@ public class BookController {
             @RequestParam(defaultValue = "name") String[] sortBy,
             @RequestParam(defaultValue = "asc") String[] sortDir
     ) {
-
         Sort sort = Sort.unsorted();
         for (int i = 0; i < sortBy.length; i++) {
             if ("desc".equalsIgnoreCase(sortDir[i])) {
@@ -70,9 +69,7 @@ public class BookController {
                 sort = sort.and(Sort.by(Sort.Order.asc(sortBy[i])));
             }
         }
-
         Pageable pageable = PageRequest.of(page, size, sort);
-
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(bookService.getPaginated(pageable, pattern));
