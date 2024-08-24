@@ -18,13 +18,16 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.hamcrest.Matchers.is;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecordMockGenerator.generateFakeBookRecord;
 import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecordMockGenerator.generateFakeBookRecords;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -73,6 +76,38 @@ class BookRecordControllerIT {
                 .andExpect(jsonPath("$.page.totalElements", is(numberOfBooks)))
                 .andExpect(jsonPath("$.page.totalPages", is(numberOfBooks / pageSize + 1)));
         verify(bookRepository).getByTextPattern(any(PageRequest.class), any(String.class));
+    }
+
+    @Test
+    void updateIfDoesNotExist() throws Exception {
+        String id = "99999999";
+        BookRecord testBook = generateFakeBookRecord();
+        String requestJson = objectWriter.writeValueAsString(testBook);
+        when(bookRepository.findById(anyString())).thenReturn(Optional.empty());
+        mockMvc.perform(
+                put("/api/v1/book/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+        )
+                .andExpect(status().isNotFound());
+        verify(bookRepository).findById(anyString());
+    }
+
+    @Test
+    void updateIfDoExist() throws Exception {
+        String id = "5";
+        BookRecord testBook = generateFakeBookRecord();
+        String requestJson = objectWriter.writeValueAsString(testBook);
+        when(bookRepository.findById(anyString())).thenReturn(Optional.of(testBook));
+        when(bookRepository.save(any(BookRecord.class))).thenReturn(testBook);
+        mockMvc.perform(
+                        put("/api/v1/book/{id}", id)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestJson)
+                )
+                .andExpect(status().isNoContent());
+        verify(bookRepository).findById(anyString());
+        verify(bookRepository).save(any(BookRecord.class));
     }
 
 }

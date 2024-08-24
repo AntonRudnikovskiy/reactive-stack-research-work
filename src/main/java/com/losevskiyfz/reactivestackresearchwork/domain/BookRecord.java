@@ -1,5 +1,6 @@
 package com.losevskiyfz.reactivestackresearchwork.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public record BookRecord(
         @Id
+        @JsonIgnore
         String id,
         String type,
         Integer quantity,

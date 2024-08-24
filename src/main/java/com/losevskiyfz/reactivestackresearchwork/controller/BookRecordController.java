@@ -34,6 +34,15 @@ public class BookRecordController {
                 .body(savedBookRecord);
     }
 
+    @PutMapping("/{id}")
+    ResponseEntity<BookRecord> update(@PathVariable String id, @RequestBody BookRecord bookRecord) {
+        if(bookService.findById(id).isPresent()) {
+            bookService.save(bookRecord);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping
     public ResponseEntity<Page<BookRecord>> get(
             @RequestParam(defaultValue = "0") int page,
