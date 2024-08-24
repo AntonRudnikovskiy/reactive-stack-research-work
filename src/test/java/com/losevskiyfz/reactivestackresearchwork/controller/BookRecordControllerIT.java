@@ -24,8 +24,8 @@ import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecor
 import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecordMockGenerator.generateFakeBookRecords;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -108,6 +108,16 @@ class BookRecordControllerIT {
                 .andExpect(status().isNoContent());
         verify(bookRepository).findById(anyString());
         verify(bookRepository).save(any(BookRecord.class));
+
+    void delete() throws Exception {
+        String idToDelete = "99";
+        doNothing().when(bookRepository).deleteById(anyString());
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/v1/book/{id}", idToDelete)
+                )
+                .andExpect(status().isNoContent());
+        verify(bookRepository).deleteById(anyString());
+
     }
 
 }
