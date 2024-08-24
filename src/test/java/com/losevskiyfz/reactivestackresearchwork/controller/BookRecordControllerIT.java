@@ -119,7 +119,6 @@ class BookRecordControllerIT {
                 )
                 .andExpect(status().isNoContent());
         verify(bookRepository).deleteById(anyString());
-
     }
 
 }

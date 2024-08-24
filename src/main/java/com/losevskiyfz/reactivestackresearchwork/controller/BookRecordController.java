@@ -2,6 +2,7 @@ package com.losevskiyfz.reactivestackresearchwork.controller;
 
 import com.losevskiyfz.reactivestackresearchwork.domain.BookRecord;
 import com.losevskiyfz.reactivestackresearchwork.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ public class BookRecordController {
     }
 
     @PostMapping
-    ResponseEntity<BookRecord> save(@RequestBody BookRecord bookRecord) {
+    ResponseEntity<BookRecord> save(@Valid @RequestBody BookRecord bookRecord) {
         BookRecord savedBookRecord = bookService.save(bookRecord);
         return ResponseEntity
                 .created(
@@ -35,7 +36,7 @@ public class BookRecordController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<BookRecord> update(@PathVariable String id, @RequestBody BookRecord bookRecord) {
+    ResponseEntity<BookRecord> update(@PathVariable String id, @Valid @RequestBody BookRecord bookRecord) {
         if(bookService.findById(id).isPresent()) {
             bookService.save(bookRecord);
             return ResponseEntity.noContent().build();
