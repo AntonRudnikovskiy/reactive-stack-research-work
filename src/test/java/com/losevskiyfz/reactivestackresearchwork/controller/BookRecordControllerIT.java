@@ -108,7 +108,9 @@ class BookRecordControllerIT {
                 .andExpect(status().isNoContent());
         verify(bookRepository).findById(anyString());
         verify(bookRepository).save(any(BookRecord.class));
+    }
 
+    @Test
     void delete() throws Exception {
         String idToDelete = "99";
         doNothing().when(bookRepository).deleteById(anyString());
