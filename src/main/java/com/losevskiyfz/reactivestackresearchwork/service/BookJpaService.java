@@ -4,7 +4,6 @@ import com.losevskiyfz.reactivestackresearchwork.domain.Book;
 import com.losevskiyfz.reactivestackresearchwork.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +24,8 @@ public class BookJpaService implements BookService {
     }
 
     @Override
-    public Page<Book> getPaginated(int page, int size, String pattern) {
-        Pageable pageRequest = PageRequest.of(page, size);
-        return bookRepository.getByTextPattern(pageRequest, pattern);
+    public Page<Book> getPaginated(Pageable pageable, String pattern) {
+        return bookRepository.getByTextPattern(pageable, pattern);
     }
 
     @Override
