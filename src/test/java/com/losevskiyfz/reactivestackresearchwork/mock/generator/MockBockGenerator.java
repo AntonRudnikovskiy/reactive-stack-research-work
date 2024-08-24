@@ -1,18 +1,18 @@
 package com.losevskiyfz.reactivestackresearchwork.mock.generator;
 
 import com.github.javafaker.Faker;
-import com.losevskiyfz.reactivestackresearchwork.domain.BookRecord;
+import com.losevskiyfz.reactivestackresearchwork.domain.Book;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class BookRecordMockGenerator {
+public class MockBockGenerator {
 
     private final static Faker faker = new Faker();
 
-    public static BookRecord generateFakeBookRecord() {
-        return BookRecord.builder()
+    public static Book generateFakeBook() {
+        return Book.builder()
                 .id(faker.idNumber().valid())
                 .type(faker.book().genre())
                 .quantity(faker.number().numberBetween(1, 100))
@@ -34,9 +34,9 @@ public class BookRecordMockGenerator {
                 .toArray(String[]::new);
     }
 
-    public static List<BookRecord> generateFakeBookRecords(int count) {
+    public static List<Book> generateFakeBooks(int count) {
         return IntStream.range(0, count)
-                .mapToObj(_ -> generateFakeBookRecord())
+                .mapToObj(_ -> generateFakeBook())
                 .collect(Collectors.toList());
     }
 

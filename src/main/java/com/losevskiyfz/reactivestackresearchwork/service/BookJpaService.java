@@ -1,6 +1,6 @@
 package com.losevskiyfz.reactivestackresearchwork.service;
 
-import com.losevskiyfz.reactivestackresearchwork.domain.BookRecord;
+import com.losevskiyfz.reactivestackresearchwork.domain.Book;
 import com.losevskiyfz.reactivestackresearchwork.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,12 +20,12 @@ public class BookJpaService implements BookService {
     }
 
     @Override
-    public BookRecord save(BookRecord book) {
+    public Book save(Book book) {
         return bookRepository.save(book);
     }
 
     @Override
-    public Page<BookRecord> getPaginated(int page, int size, String pattern) {
+    public Page<Book> getPaginated(int page, int size, String pattern) {
         Pageable pageRequest = PageRequest.of(page, size);
         return bookRepository.getByTextPattern(pageRequest, pattern);
     }
@@ -36,7 +36,7 @@ public class BookJpaService implements BookService {
     }
 
     @Override
-    public Optional<BookRecord> findById(String id){
+    public Optional<Book> findById(String id){
         return bookRepository.findById(id);
     }
 

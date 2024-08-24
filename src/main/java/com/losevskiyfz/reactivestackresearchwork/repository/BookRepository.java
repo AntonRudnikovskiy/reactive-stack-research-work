@@ -1,12 +1,12 @@
 package com.losevskiyfz.reactivestackresearchwork.repository;
 
-import com.losevskiyfz.reactivestackresearchwork.domain.BookRecord;
+import com.losevskiyfz.reactivestackresearchwork.domain.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-public interface BookRepository extends MongoRepository<BookRecord, String> {
+public interface BookRepository extends MongoRepository<Book, String> {
 
     @Query("{$or: ["
             + "{'name': {$regex: ?0, $options: 'i'}},"
@@ -21,6 +21,6 @@ public interface BookRepository extends MongoRepository<BookRecord, String> {
             + "{'room': {$regex: ?0, $options: 'i'}},"
             + "{'pages': {$regex: ?0, $options: 'i'}},"
             + "]}")
-    Page<BookRecord> getByTextPattern(Pageable pageable, String text);
+    Page<Book> getByTextPattern(Pageable pageable, String text);
 
 }

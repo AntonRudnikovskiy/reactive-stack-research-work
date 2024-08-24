@@ -1,6 +1,8 @@
 package com.losevskiyfz.reactivestackresearchwork.controller;
 
-import com.losevskiyfz.reactivestackresearchwork.domain.BookRecord;
+import com.losevskiyfz.reactivestackresearchwork.domain.Book;
+import com.losevskiyfz.reactivestackresearchwork.domain.PostBookDto;
+import com.losevskiyfz.reactivestackresearchwork.mapper.BookMapper;
 import com.losevskiyfz.reactivestackresearchwork.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,40 +14,44 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/v1/book")
-public class BookRecordController {
+public class BookController {
 
     private final BookService bookService;
+    private final BookMapper bookMapper;
 
     @Autowired
-    public BookRecordController(BookService bookService) {
+    public BookController(BookService bookService, BookMapper bookMapper) {
         this.bookService = bookService;
+        this.bookMapper = bookMapper;
     }
 
     @PostMapping
-    ResponseEntity<BookRecord> save(@Valid @RequestBody BookRecord bookRecord) {
-        BookRecord savedBookRecord = bookService.save(bookRecord);
+    ResponseEntity<Book> save(@Valid @RequestBody PostBookDto bookRecord) {
+        Book bookToSave = bookMapper.toBook(bookRecord);
+        Book savedBook = bookService.save(bookToSave);
         return ResponseEntity
                 .created(
                         ServletUriComponentsBuilder
                                 .fromCurrentRequest()
                                 .path("/{id}")
-                                .buildAndExpand(savedBookRecord.id())
+                                .buildAndExpand(savedBook.id())
                                 .toUri()
                 )
-                .body(savedBookRecord);
+                .body(savedBook);
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<BookRecord> update(@PathVariable String id, @Valid @RequestBody BookRecord bookRecord) {
+    ResponseEntity<Book> update(@PathVariable String id, @Valid @RequestBody PostBookDto bookRecord) {
         if(bookService.findById(id).isPresent()) {
-            bookService.save(bookRecord);
+            Book bookToSave = bookMapper.toBook(bookRecord);
+            bookService.save(bookToSave);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping
-    public ResponseEntity<Page<BookRecord>> get(
+    public ResponseEntity<Page<Book>> get(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String pattern) {
