@@ -22,8 +22,8 @@ import java.util.List;
 import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecordMockGenerator.generateFakeBookRecord;
 import static com.losevskiyfz.reactivestackresearchwork.mock.generator.BookRecordMockGenerator.generateFakeBookRecords;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -73,6 +73,17 @@ class BookRecordControllerIT {
                 .andExpect(jsonPath("$.page.totalElements", is(numberOfBooks)))
                 .andExpect(jsonPath("$.page.totalPages", is(numberOfBooks / pageSize + 1)));
         verify(bookRepository).getByTextPattern(any(PageRequest.class), any(String.class));
+    }
+
+    @Test
+    void delete() throws Exception {
+        String idToDelete = "99";
+        doNothing().when(bookRepository).deleteById(anyString());
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/v1/book/{id}", idToDelete)
+                )
+                .andExpect(status().isNoContent());
+        verify(bookRepository).deleteById(anyString());
     }
 
 }
