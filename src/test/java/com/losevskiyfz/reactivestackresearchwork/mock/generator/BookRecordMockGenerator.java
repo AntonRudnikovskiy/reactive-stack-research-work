@@ -22,7 +22,7 @@ public class BookRecordMockGenerator {
                 .publisher(faker.book().publisher())
                 .year(faker.number().numberBetween(1900, 2024))
                 .city(faker.address().city())
-                .department_id(faker.idNumber().valid())
+                .department_id(faker.code().isbn10())
                 .summary(faker.lorem().paragraph())
                 .room(faker.address().buildingNumber())
                 .build();
