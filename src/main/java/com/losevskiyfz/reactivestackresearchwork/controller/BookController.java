@@ -7,6 +7,9 @@ import com.losevskiyfz.reactivestackresearchwork.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,10 +57,25 @@ public class BookController {
     public ResponseEntity<Page<Book>> get(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "") String pattern) {
+            @RequestParam(defaultValue = "") String pattern,
+            @RequestParam(defaultValue = "name") String[] sortBy,
+            @RequestParam(defaultValue = "asc") String[] sortDir
+    ) {
+
+        Sort sort = Sort.unsorted();
+        for (int i = 0; i < sortBy.length; i++) {
+            if ("desc".equalsIgnoreCase(sortDir[i])) {
+                sort = sort.and(Sort.by(Sort.Order.desc(sortBy[i])));
+            } else {
+                sort = sort.and(Sort.by(Sort.Order.asc(sortBy[i])));
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(bookService.getPaginated(page, size, pattern));
+                .body(bookService.getPaginated(pageable, pattern));
     }
 
     @DeleteMapping("/{id}")

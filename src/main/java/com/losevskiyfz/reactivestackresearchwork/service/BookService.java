@@ -2,6 +2,7 @@ package com.losevskiyfz.reactivestackresearchwork.service;
 
 import com.losevskiyfz.reactivestackresearchwork.domain.Book;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -10,7 +11,7 @@ public interface BookService {
 
     void delete(String bookId);
 
-    Page<Book> getPaginated(int page, int size, String pattern);
+    Page<Book> getPaginated(Pageable pageable, String pattern);
 
     Optional<Book> findById(String id);
 }
